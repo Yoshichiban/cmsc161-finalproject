@@ -9,9 +9,98 @@
 		</style>
 	</head>
 	<body>
-		<script src="js/three.min.js"></script>
+		<script src="three.min.js"></script>
 		<script>
 			// Our Javascript will go here.
+
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+
+			var renderer = new THREE.WebGLRenderer({ antialias: true, alpha:true });
+
+
+			renderer.setSize(width, height);
+			renderer.setClearColor(0x000000, 1);
+
+			document.body.appendChild(renderer.domElement);
+
+			var scene = new THREE.Scene;
+			var panelgrp = new THREE.Group;
+
+			// RIGHT SOLAR PANELS
+			var rectLength = 120, rectWidth = 120;
+
+			var rectShape = new THREE.Shape();
+			rectShape.moveTo( 0,0 );
+			rectShape.lineTo( 0, rectWidth );
+			rectShape.lineTo( rectLength, rectWidth );
+			rectShape.lineTo( rectLength, 0 );
+			rectShape.lineTo( 0, 0 );
+
+			var rectGeom = new THREE.ShapeGeometry( rectShape );
+			var rectMesh = new THREE.Mesh( rectGeom, new THREE.MeshBasicMaterial( { color: 0xff0000 } ) ) ;
+			panelgrp.add( rectMesh );
+
+			var rectShape2 = new THREE.Shape();
+			rectShape2.moveTo( 1,1 );
+			rectShape2.lineTo( 0, rectWidth );
+			rectShape2.lineTo( rectLength, rectWidth );
+			rectShape2.lineTo( rectLength, 0 );
+			rectShape2.lineTo( 0, 0 );
+
+			var rectGeom2 = new THREE.ShapeGeometry( rectShape );
+			var rectMesh2 = new THREE.Mesh( rectGeom, new THREE.MeshBasicMaterial( { color: 0xffcc33 } ) ) ;
+			panelgrp.add( rectMesh2 );
+
+			var rectShape3 = new THREE.Shape();
+			rectShape3.moveTo( 0,0 );
+			rectShape3.lineTo( 0, rectWidth );
+			rectShape3.lineTo( rectLength, rectWidth );
+			rectShape3.lineTo( rectLength, 0 );
+			rectShape3.lineTo( 0, 0 );
+
+			var rectGeom3 = new THREE.ShapeGeometry( rectShape );
+			var rectMesh3 = new THREE.Mesh( rectGeom, new THREE.MeshBasicMaterial( { color: 0xccff44 } ) ) ;
+			panelgrp.add( rectMesh3 );
+			//global cam
+			var camera2 = new THREE.PerspectiveCamera(45, width / height, 0.1, 10000);
+			camera2.position.y = 100;
+			camera2.position.z = 0    ;
+			camera2.position.x= 300;
+
+			scene.add(camera2);
+			scene.add(panelgrp);
+			var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
+			directionalLight.position.set( 0, 1, 50 );
+			scene.add( directionalLight );
+
+			var light = new THREE.AmbientLight( 0x404040 ); // soft white light
+			scene.add( light );
+
+			function activateSolarPanel() {
+					if(rectMesh.rotation.x > - 1.5){
+						rectMesh.rotation.x -= 0.005;
+						rectMesh2.rotation.x -= 0.005;
+						rectMesh3.rotation.x -= 0.005;
+						console.log(rectMesh.rotation.x);
+					}else if(rectMesh2.rotation.x < -0.5){
+						rectMesh2.rotation.x += 0.005;
+
+					}else if(rectMesh3.rotation.x > -2.5){
+						rectMesh3.rotation.x -= 0.005;
+					}
+			}
+
+			function render() {
+			    var clock = new THREE.Clock;
+			    camera2.lookAt(rectMesh.position);
+				activateSolarPanel();
+				renderer.render(scene, camera2);
+			    requestAnimationFrame(render);
+			}
+
+			render();
+
 		</script>
 	</body>
 </html>
